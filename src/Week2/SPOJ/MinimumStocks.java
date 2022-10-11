@@ -3,42 +3,48 @@ package Week2.SPOJ;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
-public class AdaAndQueue {
+public class MinimumStocks {
     public static void main(String[] args) throws IOException {
         Reader reader = new Reader();
         PrintWriter out = new PrintWriter(System.out);
         StringBuilder s = new StringBuilder();
-
-        int numOfQueries = reader.nextInt();
-        ArrayDeque<Integer> queue = new ArrayDeque<>();
-        String code;
-        int a = 0;
-        boolean r = false;
-        while (numOfQueries-- > 0) {
-            StringTokenizer str = new StringTokenizer(reader.readLine());
-            code = str.nextToken();
-            if (str.hasMoreTokens()) a = Integer.parseInt(str.nextToken());
+        HashMap<String, Integer> map = new HashMap<>();
+        PriorityQueue<String> queue = new PriorityQueue<>((a,b) -> map.get(a) - map.get(b));
+        int day = reader.nextInt();
+        int code, price;
+        int count = 0;
+        String stock;
+        while (day-- > 0) {
+            count++;
+            StringTokenizer instruction = new StringTokenizer(reader.readLine());
+            code = Integer.parseInt(instruction.nextToken());
             switch (code) {
-                case "toFront":
-                    if (r) queue.offer(a);
-                    else queue.offerFirst(a);
+                case 1:
+                    stock = instruction.nextToken();
+                    price = Integer.parseInt(instruction.nextToken());
+                    map.put(stock, price);
+                    queue.add(stock);
                     break;
-                case "push_back":
-                    if (!r) queue.offer(a);
-                    else queue.offerFirst(a);
+                case 2:
+                    stock = instruction.nextToken();
+                    price = Integer.parseInt(instruction.nextToken());
+                    map.put(stock, price);
+                    if (!queue.isEmpty()) {
+                        String finalStock = stock;
+                        queue.removeIf(p -> p.equals(finalStock));
+                        queue.add(finalStock);
+                    }
                     break;
-                case "back":
-                    if (queue.isEmpty()) s.append("No job for Ada?").append("\n");
-                    else s.append(r ? queue.pollFirst() : queue.pollLast()).append("\n");
-                    break;
-                case "front":
-                    if (queue.isEmpty()) s.append("No job for Ada?").append("\n");
-                    else s.append(r ? queue.pollLast() : queue.pollFirst()).append("\n");
-                    break;
-                case "reverse":
-                    r = !r;
+                case 3:
+                    if (!queue.isEmpty()) {
+                        s.append(queue.peek()).append(" ").append(count).append("\n");
+                        map.remove(queue.poll());
+                    }
                     break;
             }
         }

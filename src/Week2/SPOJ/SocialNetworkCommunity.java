@@ -7,17 +7,18 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class SocialNetworkCommunity {
-
+    static int[] parent, size;
+    static int sizeOfCommunity;
     public static void main(String[] args) throws IOException {
         Reader reader = new Reader();
         PrintWriter out = new PrintWriter(System.out);
         StringBuilder s = new StringBuilder();
 
         int numOfUser = reader.nextInt();
-        int sizeOfCommunity = reader.nextInt();
-        int[] parent = new int[numOfUser + 1];
+        sizeOfCommunity = reader.nextInt();
+        parent = new int[numOfUser + 1];
         Arrays.setAll(parent, p -> p);
-        int[] size = new int[numOfUser + 1];
+        size = new int[numOfUser + 1];
         Arrays.fill(size, 1);
 
         int numOfQueries = reader.nextInt();
@@ -31,9 +32,15 @@ public class SocialNetworkCommunity {
             a = Integer.parseInt(str.nextToken());
             if (str.hasMoreTokens()) b = Integer.parseInt(str.nextToken());
             switch (code) {
-                case "S" -> s.append(size[find(parent, a)]).append("\n");
-                case "A" -> union(parent, size, sizeOfCommunity, a, b);
-                case "E" -> s.append(checkConnect(parent, a, b)).append("\n");
+                case "S" :
+                    s.append(size[find(a)]).append("\n");
+                    break;
+                case "A" :
+                    union(a, b);
+                    break;
+                case "E" :
+                    s.append(checkConnect(a, b)).append("\n");
+                    break;
             }
 
         }
@@ -42,14 +49,14 @@ public class SocialNetworkCommunity {
         reader.close();
     }
 
-    static int find(int[] parent, int a) {
-        if (parent[a] != a) return find(parent, parent[a]);
+    static int find(int a) {
+        if (parent[a] != a) return find(parent[a]);
         return a;
     }
 
-    static void union(int[] parent, int[] size, int sizeOfCommunity, int a, int b) {
-        int rootA = find(parent, a);
-        int rootB = find(parent, b);
+    static void union(int a, int b) {
+        int rootA = find(a);
+        int rootB = find(b);
         if (size[rootA] + size[rootB] <=sizeOfCommunity) {
             if (size[rootA] < size[rootB]) {
                 parent[rootA] = parent[rootB];
@@ -61,8 +68,8 @@ public class SocialNetworkCommunity {
         }
     }
 
-    static String checkConnect(int[] parent, int a, int b) {
-        if (find(parent, a) == find(parent, b)) return "Yes";
+    static String checkConnect(int a, int b) {
+        if (find(a) == find(b)) return "Yes";
         return "No";
     }
 

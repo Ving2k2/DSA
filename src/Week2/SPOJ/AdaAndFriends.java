@@ -5,54 +5,38 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-public class AdaAndQueue {
+public class AdaAndFriends {
     public static void main(String[] args) throws IOException {
         Reader reader = new Reader();
         PrintWriter out = new PrintWriter(System.out);
         StringBuilder s = new StringBuilder();
-
-        int numOfQueries = reader.nextInt();
-        ArrayDeque<Integer> queue = new ArrayDeque<>();
-        String code;
-        int a = 0;
-        boolean r = false;
-        while (numOfQueries-- > 0) {
+        HashMap<String, Long> map = new HashMap<>();
+        Set<String> queue = new HashSet<>();
+        int numOfCel = reader.nextInt();
+        int maxUnfriend = reader.nextInt();
+        String name;
+        Long money, sum;
+        while (numOfCel-- > 0) {
             StringTokenizer str = new StringTokenizer(reader.readLine());
-            code = str.nextToken();
-            if (str.hasMoreTokens()) a = Integer.parseInt(str.nextToken());
-            switch (code) {
-                case "toFront":
-                    if (r) queue.offer(a);
-                    else queue.offerFirst(a);
-                    break;
-                case "push_back":
-                    if (!r) queue.offer(a);
-                    else queue.offerFirst(a);
-                    break;
-                case "back":
-                    if (queue.isEmpty()) s.append("No job for Ada?").append("\n");
-                    else s.append(r ? queue.pollFirst() : queue.pollLast()).append("\n");
-                    break;
-                case "front":
-                    if (queue.isEmpty()) s.append("No job for Ada?").append("\n");
-                    else s.append(r ? queue.pollLast() : queue.pollFirst()).append("\n");
-                    break;
-                case "reverse":
-                    r = !r;
-                    break;
-            }
+            name = str.nextToken();
+            money = Long.valueOf(str.nextToken());
+            if(map.containsKey(name)) money += map.get(name);
+            map.put(name, money);
+            queue.add(name);
         }
+        if (queue.size() <= maxUnfriend) sum = map.values().stream().reduce(0L, Long::sum);
+        else sum = queue.stream().sorted(Collections.reverseOrder(Comparator.comparingLong(map::get))).limit(maxUnfriend)
+                    .mapToLong(map::get).sum();
+        s.append(sum);
         out.print(s);
         out.close();
         reader.close();
     }
 
     static class Reader {
-        final private int BUFFER_SIZE = 1 << 16;
         private final DataInputStream din;
         private final byte[] buffer;
         private int bufferPointer, bytesRead;
-
         public Reader() {
             din = new DataInputStream(System.in);
             buffer = new byte[BUFFER_SIZE];
@@ -87,6 +71,8 @@ public class AdaAndQueue {
             return new String(buf, 0, cnt);
         }
 
+        final private int BUFFER_SIZE = 1 << 16;
+
         private void fillBuffer() throws IOException {
             bytesRead = din.read(buffer, bufferPointer = 0,
                     BUFFER_SIZE);
@@ -107,3 +93,4 @@ public class AdaAndQueue {
         }
     }
 }
+

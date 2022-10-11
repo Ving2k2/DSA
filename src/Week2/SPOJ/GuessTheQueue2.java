@@ -3,56 +3,70 @@ package Week2.SPOJ;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-public class AdaAndQueue {
+public class GuessTheQueue2 {
     public static void main(String[] args) throws IOException {
         Reader reader = new Reader();
         PrintWriter out = new PrintWriter(System.out);
         StringBuilder s = new StringBuilder();
-
-        int numOfQueries = reader.nextInt();
-        ArrayDeque<Integer> queue = new ArrayDeque<>();
-        String code;
-        int a = 0;
-        boolean r = false;
-        while (numOfQueries-- > 0) {
-            StringTokenizer str = new StringTokenizer(reader.readLine());
-            code = str.nextToken();
-            if (str.hasMoreTokens()) a = Integer.parseInt(str.nextToken());
-            switch (code) {
-                case "toFront":
-                    if (r) queue.offer(a);
-                    else queue.offerFirst(a);
-                    break;
-                case "push_back":
-                    if (!r) queue.offer(a);
-                    else queue.offerFirst(a);
-                    break;
-                case "back":
-                    if (queue.isEmpty()) s.append("No job for Ada?").append("\n");
-                    else s.append(r ? queue.pollFirst() : queue.pollLast()).append("\n");
-                    break;
-                case "front":
-                    if (queue.isEmpty()) s.append("No job for Ada?").append("\n");
-                    else s.append(r ? queue.pollLast() : queue.pollFirst()).append("\n");
-                    break;
-                case "reverse":
-                    r = !r;
-                    break;
+        int numOfTest = reader.nextInt();
+        int numOfOperations;
+        int count = 0;
+        String x, y, code;
+        final int offset = 200025;
+        while (count++ < numOfTest) {
+            int high = offset;
+            int low = offset;
+            s.append("Case ").append(count).append(":\n");
+            String[] data = new String[400125];
+            Map<String, Integer> position = new HashMap<>();
+            numOfOperations = reader.nextInt();
+            while (numOfOperations-- > 0) {
+                StringTokenizer token = new StringTokenizer(reader.readLine());
+                code = token.nextToken();
+                switch (code) {
+                    case "1":
+                        x = token.nextToken();
+                        y = token.nextToken();
+                        if (x.equals("B")) {
+                            position.put(y, high);
+                            data[high] = y;
+                            high++;
+                        } else {
+                            low--;
+                            position.put(y, low);
+                            data[low] = y;
+                        }
+                        break;
+                    case "2":
+                        x = token.nextToken();
+                        if (x.equals("B")) high--;
+                        else low++;
+                        break;
+                    case "3":
+                        x = token.nextToken();
+                        y = token.nextToken();
+                        int finalY = Integer.parseInt(y);
+                        if (x.equals("D")) s.append(data[low + finalY - 1]).append("\n");
+                        else s.append(position.get(y) - low + 1).append("\n");
+                        break;
+                }
             }
         }
+
         out.print(s);
         out.close();
         reader.close();
     }
 
     static class Reader {
-        final private int BUFFER_SIZE = 1 << 16;
         private final DataInputStream din;
         private final byte[] buffer;
         private int bufferPointer, bytesRead;
-
         public Reader() {
             din = new DataInputStream(System.in);
             buffer = new byte[BUFFER_SIZE];
@@ -86,6 +100,8 @@ public class AdaAndQueue {
             }
             return new String(buf, 0, cnt);
         }
+
+        final private int BUFFER_SIZE = 1 << 16;
 
         private void fillBuffer() throws IOException {
             bytesRead = din.read(buffer, bufferPointer = 0,
