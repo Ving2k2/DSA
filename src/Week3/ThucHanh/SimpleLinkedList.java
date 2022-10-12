@@ -105,6 +105,8 @@ public class SimpleLinkedList<T> {
             pre.next = tmp.next;
             return tmp.data;
         }
+
+        n--;
         return null;
     }
     public void remove(T data) {

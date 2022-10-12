@@ -1,17 +1,18 @@
 package Week4.ThucHanh;
 
+
 import java.util.Iterator;
 
-public class stack<E> implements stackInterface<E> {
+public class ArrayStack<E> implements StackInterface<E> {
     private E[] data;
     private int size = -1;
     public static final int CAPACITY = 1000;
 
-    public stack() {
+    public ArrayStack() {
         data = (E[]) new Object[CAPACITY];
     }
 
-    public stack(int capacity) {
+    public ArrayStack(int capacity) {
         data = (E[]) new Object[capacity];
     }
 
@@ -45,11 +46,26 @@ public class stack<E> implements stackInterface<E> {
     @Override
     public E top() {
         if (isEmpty()) return null;
-        return null;
+        return data[size];
+    }
+
+    private class iterArray<E> implements Iterator<E> {
+        int i = 0;
+
+        @Override
+        public boolean hasNext() {
+            return i < size + 1;
+        }
+
+        @Override
+        public E next() {
+            if (hasNext()) return (E) data[i++];
+            return null;
+        }
     }
 
     @Override
-    public Iterator iterator() {
-        return null;
+    public Iterator<E> iterator() {
+        return new ArrayStack.iterArray();
     }
 }
