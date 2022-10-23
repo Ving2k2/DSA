@@ -51,7 +51,7 @@ public class SimpleLinkedList<T> {
         int count = 0;
         Node tmp = top, pre;
         if (i == 0) return top.data;
-        while (count <= i) {
+        while (count < i) {
             pre = tmp;
             tmp = tmp.next;
             count++;
@@ -88,6 +88,7 @@ public class SimpleLinkedList<T> {
         Node tmp = top;
         if (top != null) {
             top = tmp.next;
+            n--;
             return top.data;
         }
         return null;
@@ -105,7 +106,6 @@ public class SimpleLinkedList<T> {
             pre.next = tmp.next;
             return tmp.data;
         }
-
         n--;
         return null;
     }
@@ -128,7 +128,6 @@ public class SimpleLinkedList<T> {
         if (tmp == null) {
             System.out.println("Data not found");
         }
-
         n--;
     }
 

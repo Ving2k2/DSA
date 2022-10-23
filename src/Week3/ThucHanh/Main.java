@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class Main {
     public static void main(String[] args) {
-        SimpleArrayList simpleArrayList = new SimpleArrayList<>();
+        SimpleArrayList<Integer> simpleArrayList = new SimpleArrayList<>();
         simpleArrayList.add(1);
         simpleArrayList.add(2);
         simpleArrayList.add(3);
@@ -13,15 +13,14 @@ public class Main {
         int i = 2;
         System.out.println("Object at index " + i + " is: " + simpleArrayList.get(2));
         simpleArrayList.remove(3);
-        Iterator inter = simpleArrayList.iterator();
-        while (inter.hasNext()) System.out.print(inter.next() +  " ");
+        for (Integer integer : simpleArrayList) System.out.print(integer + " ");
         System.out.println();
         System.out.println("Size of array: " + simpleArrayList.size());
 
         ///////////////////////
 
         System.out.println();
-        SimpleLinkedList list = new SimpleLinkedList();
+        SimpleLinkedList<Integer> list = new SimpleLinkedList<>();
         list.add(1);
         list.add(2);
         list.addBot(3);
