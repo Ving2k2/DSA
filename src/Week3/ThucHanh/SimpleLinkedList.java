@@ -61,22 +61,20 @@ public class SimpleLinkedList<T> {
     public void set(int i, T data){
         int count = 0;
         Node tmp = top, pre;
-        Node change = new Node(data);
-        while (count <= i) {
-            pre = tmp;
+        for (int j = 0; j < i; j++) {
             tmp = tmp.next;
-            if (count == i) tmp = change;
-            count++;
         }
+        tmp.data = data;
     }
     public boolean isContain(T data) {
-        Node tmp = top, pre;
-        Node change = new Node(data);
-        while (tmp != null && tmp.data != data) {
-            pre = tmp;
+        Node tmp = top;
+        for (int i = 0; i < n; i++) {
+            if (tmp.data.equals(data)) {
+                return true;
+            }
             tmp = tmp.next;
         }
-        return tmp.data == data;
+        return false;
     }
     public int size() {
         return n;
@@ -89,7 +87,7 @@ public class SimpleLinkedList<T> {
         if (top != null) {
             top = tmp.next;
             n--;
-            return top.data;
+            return tmp.data;
         }
         return null;
     }
@@ -104,6 +102,7 @@ public class SimpleLinkedList<T> {
 
         if(pre != null) {
             pre.next = tmp.next;
+            n--;
             return tmp.data;
         }
         n--;

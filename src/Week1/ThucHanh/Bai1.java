@@ -12,6 +12,7 @@ public class Bai1 {
 
         int n = Integer.parseInt(br.readLine());
         int[] a = new int[n];
+        //Arrays.setAll(a , i -> i);
         StringTokenizer str = new StringTokenizer(br.readLine());
 
         for (int j = 0; j < n; j++) {

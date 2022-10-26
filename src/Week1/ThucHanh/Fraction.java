@@ -28,12 +28,16 @@ public class Fraction {
         this.denominator = denominator;
     }
 
-    public static String sum(Fraction fraction, Fraction another) {
+
+    public void print() {
+        System.out.println(this.getDenominator() + "/" + this.getNumerator());
+    }
+    public void sum(Fraction another) {
         int num = 0;
         int deno = 0;
-        int deno1 = fraction.getDenominator();
+        int deno1 = this.getDenominator();
         int deno2 = another.getDenominator();
-        int num1 = fraction.getNumerator();
+        int num1 = this.getNumerator();
         int num2 = another.getNumerator();
         if (deno1 == deno2) {
             num = num1 + num2;
@@ -42,16 +46,15 @@ public class Fraction {
             num = (num1 * deno2) + (num2 * deno1);
             deno = deno1 * deno2;
         }
-
-        return reduce(num, deno);
+        System.out.println(reduce(num, deno));
     }
 
-    public static String min(Fraction fraction, Fraction another) {
+    public void min(Fraction another) {
         int num = 0;
         int deno = 0;
-        int deno1 = fraction.getDenominator();
+        int deno1 = this.getDenominator();
         int deno2 = another.getDenominator();
-        int num1 = fraction.getNumerator();
+        int num1 = this.getNumerator();
         int num2 = another.getNumerator();
         if (deno1 == deno2) {
             num = num1 - num2;
@@ -60,31 +63,31 @@ public class Fraction {
             num = (num1 * deno2) - (num2 * deno1);
             deno = deno1 * deno2;
         }
-
-        return reduce(num, deno);
+        System.out.println(reduce(num, deno));
     }
 
-    public static String divide(Fraction fraction, Fraction another) {
-        int deno1 = fraction.getDenominator();
+    public void divide(Fraction another) {
+        int deno1 = this.getDenominator();
         int deno2 = another.getDenominator();
-        int num1 = fraction.getNumerator();
+        int num1 = this.getNumerator();
         int num2 = another.getNumerator();
         int numDiv = num1 * deno2;
         int denoDiv = deno1 * num2;
-        return reduce(numDiv, denoDiv);
+        System.out.println(reduce(numDiv, denoDiv));
     }
 
-    public static String pow(Fraction fraction, Fraction another) {
-        int deno1 = fraction.getDenominator();
+    public void pow(Fraction another) {
+        int deno1 = this.getDenominator();
         int deno2 = another.getDenominator();
-        int num1 = fraction.getNumerator();
+        int num1 = this.getNumerator();
         int num2 = another.getNumerator();
         int numPow = num1 * num2;
         int denoPow = deno1 * deno2;
-        return reduce(numPow, denoPow);
+        System.out.println(reduce(numPow, denoPow));
     }
 
     public static String reduce(int num, int deno) {
+        if (num == 0) return "0";
         int gcd = 0;
         int numTemp = num;
         int denoTemp = deno;
@@ -99,6 +102,7 @@ public class Fraction {
             num /= gcd;
             deno /=gcd;
         }
+        if (num == deno) return "1";
         return num + "/" + deno;
     }
 }
