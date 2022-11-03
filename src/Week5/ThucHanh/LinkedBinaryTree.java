@@ -50,17 +50,9 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
         }
     }
 
-    protected Node<E> validate(T p) throws IllegalArgumentException {
-        if (!(p instanceof Node))
-            throw new IllegalArgumentException("Not valid position type");
-        Node<E> node = (Node<E>) p; // safe cast
-
-        if (node.getParent() == node) // our convention for defunct node
-            throw new IllegalArgumentException("p is no longer in the tree");
-        return node;
-    }
 
     public void setRoot(E element) {
+        if (n == 0) n++;
         root.element = element;
     }
 
@@ -114,15 +106,12 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
         treeLevel.add(root);
         LinkedList<Node> temp = new LinkedList<Node>();
         int counter = 1;
-        while (counter < (int) p) {
+        while (counter <= (int) p) {
             Node removed = treeLevel.removeFirst();
-            if (removed == null) {
-                temp.add(null);
-                temp.add(null);
-            } else {
-                temp.add(removed.left);
-                temp.add(removed.right);
-            }
+            if (removed.left == null) removed.left = new Node<>(null, removed, null, null);
+            if (removed.right == null) removed.right = new Node<>(null, removed, null, null);
+            temp.add(removed.left);
+            temp.add(removed.right);
             if (treeLevel.isEmpty()) {
                 treeLevel = temp;
                 temp = new LinkedList<>();
@@ -130,7 +119,7 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
             counter++;
         }
         Node test = treeLevel.removeFirst();
-        return (T) test.element;
+        return (T) test.parent.element;
     }
 
     @Override
@@ -141,13 +130,10 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
         int counter = 1;
         while (counter <= (int) p) {
             Node removed = treeLevel.removeFirst();
-            if (removed == null) {
-                temp.add(null);
-                temp.add(null);
-            } else {
-                temp.add(removed.left);
-                temp.add(removed.right);
-            }
+            if (removed.left == null) removed.left = new Node<>(null, removed, null, null);
+            if (removed.right == null) removed.right = new Node<>(null, removed, null, null);
+            temp.add(removed.left);
+            temp.add(removed.right);
             if (treeLevel.isEmpty()) {
                 treeLevel = temp;
                 temp = new LinkedList<>();
@@ -167,13 +153,10 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
         int counter = 1;
         while (counter <= (int) p) {
             Node removed = treeLevel.removeFirst();
-            if (removed == null) {
-                temp.add(null);
-                temp.add(null);
-            } else {
-                temp.add(removed.left);
-                temp.add(removed.right);
-            }
+            if (removed.left == null) removed.left = new Node<>(null, removed, null, null);
+            if (removed.right == null) removed.right = new Node<>(null, removed, null, null);
+            temp.add(removed.left);
+            temp.add(removed.right);
             if (treeLevel.isEmpty()) {
                 treeLevel = temp;
                 temp = new LinkedList<>();
@@ -190,16 +173,13 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
         LinkedList<Node> treeLevel = new LinkedList<Node>();
         treeLevel.add(root);
         LinkedList<Node> temp = new LinkedList<Node>();
-        int counter = 1;
-        while (counter <= (int) p) {
+        int counter = 0;
+        while (counter < (int) p) {
             Node removed = treeLevel.removeFirst();
-            if (removed == null) {
-                temp.add(null);
-                temp.add(null);
-            } else {
-                temp.add(removed.left);
-                temp.add(removed.right);
-            }
+            if (removed.left == null) removed.left = new Node<>(null, removed, null, null);
+            if (removed.right == null) removed.right = new Node<>(null, removed, null, null);
+            temp.add(removed.left);
+            temp.add(removed.right);
             if (treeLevel.isEmpty()) {
                 treeLevel = temp;
                 temp = new LinkedList<>();
@@ -208,7 +188,7 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
         }
         Node test = treeLevel.removeFirst();
         if (test == test.parent.right) return (T) test.parent.left.element;
-        if (test == test.parent.left)  return (T) test.parent.right.element;
+        if (test == test.parent.left) return (T) test.parent.right.element;
         return null;
     }
 
@@ -289,7 +269,7 @@ public class LinkedBinaryTree<E,T> implements BinaryTreeInterface<T> {
 
     public static void printSpace(double n, Node removed)
     {
-        for (; n > 0; n--) {
+        for (n /= 1.25; n > 0; n -= 2) {
             System.out.print("\t");
         }
         if (removed == null) {

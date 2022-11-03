@@ -24,12 +24,4 @@ public class Bai2 {
             }
         }
     }
-
-
-
-
-
-
-
-
 }
