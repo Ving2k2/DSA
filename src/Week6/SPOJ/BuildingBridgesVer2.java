@@ -2,66 +2,48 @@ package Week6.SPOJ;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
-public class HowToHandleTheFans {
-    static int[] office;
+public class BuildingBridgesVer2 {
     public static void main(String[] args) throws IOException {
-        Reader reader = new Reader();
+        Reader scanner = new Reader(System.in);
+        StringBuilder str = new StringBuilder();
         PrintWriter out = new PrintWriter(System.out);
-        StringBuilder s = new StringBuilder();
-        StringTokenizer str = new StringTokenizer(reader.readLine());
-        int N = Integer.parseInt(str.nextToken());
-        int Q = Integer.parseInt(str.nextToken());
-        office = new int[4 * N];
-        Arrays.setAll(office, i -> 0);
-        while (Q-- > 0) {
-            str = new StringTokenizer(reader.readLine());
-            if (str.nextToken().equals("find")) {
-                int numStart = Integer.parseInt(str.nextToken());
-                int numEnd = Integer.parseInt(str.nextToken());
-                int sum =find(0, 1, N, numStart, numEnd);
-                s.append(sum).append("\n");
-            } else {
-                int position = Integer.parseInt(str.nextToken());
-                int numOfFan = Integer.parseInt(str.nextToken());
-                add(0, 1, N, position, numOfFan);
-            }
+        int numOfTest = scanner.nextInt();
+        while (numOfTest-- > 0) {
+            int numOfEndPoint = scanner.nextInt();
+            int[][] Oxy = new int[numOfEndPoint][2];
+            for (int i = 0; i < Oxy.length; i++) Oxy[i][0] = scanner.nextInt();
+            for (int i = 0; i < Oxy.length; i++) Oxy[i][1] = scanner.nextInt();
+            Arrays.sort(Oxy, (x1,x2) -> x1[0] == x2[0] ? x1[1] - x2[1] : x1[0] - x2[0]);
+            str.append(bridges(Oxy, Oxy.length)).append("\n");
         }
-        out.print(s);
+        out.print(str);
+        scanner.close();
         out.close();
-        reader.close();
     }
 
-    public static void add(int id, int l, int r, int i, int v) {
-        if (i < l || i > r) return;
-        if (l == r) {
-            office[id] += v;
-            return;
-        }
-        int mid = (l + r) / 2;
-        add(id * 2 + 1, l, mid, i, v);
-        add(id * 2 + 2, mid + 1, r, i, v);
+    public static int bridges(int[][] arr, int n) {
+        int[] lis = new int[n];
+        int i, j, max = 0;
 
-        office[id] = office[id * 2 + 1] + office[id * 2 + 2];
-    }
+        Arrays.fill(lis,1);
 
-    public static int find(int id, int l, int r, int u, int v) {
-        if (l > v || r < u) return 0;
-        if (l >= u && v >= r) return office[id];
-        int mid = (l + r) / 2;
+        for (i = 1; i < n; i++)
+            for (j = 0; j < i; j++)
+                if (arr[i][1] >= arr[j][1] && lis[i] < lis[j] + 1)
+                    lis[i] = lis[j] + 1;
 
-        return find(id * 2 + 1, l, mid, u, v) +
-                find(id * 2 + 2, mid + 1, r, u, v);
+        return Arrays.stream(lis).max().getAsInt();
     }
 
     static class Reader {
         private final DataInputStream din;
         private final byte[] buffer;
         private int bufferPointer, bytesRead;
-        public Reader() {
+        public Reader(InputStream in) {
             din = new DataInputStream(System.in);
             buffer = new byte[BUFFER_SIZE];
             bufferPointer = bytesRead = 0;
@@ -117,3 +99,4 @@ public class HowToHandleTheFans {
         }
     }
 }
+

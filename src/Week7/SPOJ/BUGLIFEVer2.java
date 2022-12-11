@@ -1,60 +1,54 @@
-package Week6.SPOJ;
+package Week7.SPOJ;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-public class HowToHandleTheFans {
-    static int[] office;
+public class BUGLIFEVer2 {
+    private static int[] gender;
+    private static ArrayList<Integer>[] relate;
     public static void main(String[] args) throws IOException {
-        Reader reader = new Reader();
+        Reader scanner = new Reader();
+        StringBuilder str = new StringBuilder();
         PrintWriter out = new PrintWriter(System.out);
-        StringBuilder s = new StringBuilder();
-        StringTokenizer str = new StringTokenizer(reader.readLine());
-        int N = Integer.parseInt(str.nextToken());
-        int Q = Integer.parseInt(str.nextToken());
-        office = new int[4 * N];
-        Arrays.setAll(office, i -> 0);
-        while (Q-- > 0) {
-            str = new StringTokenizer(reader.readLine());
-            if (str.nextToken().equals("find")) {
-                int numStart = Integer.parseInt(str.nextToken());
-                int numEnd = Integer.parseInt(str.nextToken());
-                int sum =find(0, 1, N, numStart, numEnd);
-                s.append(sum).append("\n");
-            } else {
-                int position = Integer.parseInt(str.nextToken());
-                int numOfFan = Integer.parseInt(str.nextToken());
-                add(0, 1, N, position, numOfFan);
+        int numTest = scanner.nextInt();
+        int count = 0;
+        while (++count <= numTest) {
+            boolean errHomo = false;
+            int numOfBugs = scanner.nextInt();
+            relate = new ArrayList[numOfBugs];
+            int numOfAction = scanner.nextInt();
+            for (int i = 0; i < numOfBugs; i++) relate[i] = new ArrayList<Integer>();
+
+            gender = new int[numOfBugs];
+            Arrays.fill(gender, -1);
+
+            while (--numOfAction >= 0) {
+                int bug1 = scanner.nextInt() - 1;
+                int bug2 = scanner.nextInt() - 1;
+                relate[bug1].add(bug2);
+                relate[bug2].add(bug1);
             }
+
+            for (int i = 0; i < numOfBugs; i++) {
+                if (gender[i] == -1 && checkHomoErr(i, 1)) errHomo = true;
+            }
+
+            if (errHomo) str.append("Scenario #").append(count).append(":\n").append("Suspicious bugs found!\n");
+            else str.append("Scenario #").append(count).append(":\n").append("No suspicious bugs found!\n");
         }
-        out.print(s);
+        out.print(str);
         out.close();
-        reader.close();
+        scanner.close();
     }
 
-    public static void add(int id, int l, int r, int i, int v) {
-        if (i < l || i > r) return;
-        if (l == r) {
-            office[id] += v;
-            return;
-        }
-        int mid = (l + r) / 2;
-        add(id * 2 + 1, l, mid, i, v);
-        add(id * 2 + 2, mid + 1, r, i, v);
-
-        office[id] = office[id * 2 + 1] + office[id * 2 + 2];
-    }
-
-    public static int find(int id, int l, int r, int u, int v) {
-        if (l > v || r < u) return 0;
-        if (l >= u && v >= r) return office[id];
-        int mid = (l + r) / 2;
-
-        return find(id * 2 + 1, l, mid, u, v) +
-                find(id * 2 + 2, mid + 1, r, u, v);
+    public static boolean checkHomoErr(int bug, int love) {
+       if (gender[bug] != -1) return gender[bug] != love;
+       int nLove = 1 - love;
+       gender[bug] = love;
+       for (int bugs : relate[bug]) {
+           if (checkHomoErr(bugs, nLove)) return true;
+       }
+       return false;
     }
 
     static class Reader {
@@ -117,3 +111,4 @@ public class HowToHandleTheFans {
         }
     }
 }
+
